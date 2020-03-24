@@ -44,6 +44,10 @@ class ArtistViewController: UIViewController {
                 list: InfinityList<Song>(musicProvider: viewModel.musicProvider),
                 endpoint: .searchByArtist(artist: viewModel.artist))
         vc.title = "All songs"
+        vc.cellConfiguration = { song, cell in
+            cell.textLabel?.text = song.trackName
+            cell.detailTextLabel?.text = "\(song.releaseDate)"
+        }
         show(vc, sender: nil)
     }
     
@@ -52,6 +56,10 @@ class ArtistViewController: UIViewController {
             list: InfinityList<Album>(musicProvider: viewModel.musicProvider),
             endpoint: .searchByArtist(artist: viewModel.artist))
         vc.title = "All albums"
+        vc.cellConfiguration = { album, cell in
+            cell.textLabel?.text = album.collectionName
+            cell.detailTextLabel?.text = "\(album.releaseDate)"
+        }
         show(vc, sender: nil)
     }
 }

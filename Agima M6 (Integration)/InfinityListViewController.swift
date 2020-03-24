@@ -31,6 +31,8 @@ class InfinityListViewController<T: Loadable>: UIViewController, UITableViewDele
         fatalError("init(coder:) has not been implemented")
     }
     
+    var cellConfiguration: ((T, UITableViewCell)->())?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,8 +52,8 @@ class InfinityListViewController<T: Loadable>: UIViewController, UITableViewDele
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         
-        infinityList.items.bind(to: tableView.rx.items(cellIdentifier: cellIdentifier, cellType: UITableViewCell.self)) { index, item, cell in
-            cell.textLabel?.text = "\(item)"
+        infinityList.items.bind(to: tableView.rx.items(cellIdentifier: cellIdentifier, cellType: UITableViewCell.self)) { [weak self] index, item, cell in
+            self?.cellConfiguration?(item, cell)
         }.disposed(by: bag)
         
         infinityList.fetch(endpoint: endpoint)
