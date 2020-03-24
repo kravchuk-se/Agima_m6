@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Album: Codable {
+struct Album: JSONDecodable {
     let collectionName: String
     let artworkUrl60: URL
     let artworkUrl100: URL

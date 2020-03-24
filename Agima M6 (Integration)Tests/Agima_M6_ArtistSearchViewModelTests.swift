@@ -13,11 +13,15 @@ import RxSwift
 
 class Agima_M6_ArtistSearchViewModelTests: XCTestCase {
     
-    var sut: ArtistSearchViewModel!
+    var sut: InfinityList<Artist>!
+    
+    let portionSize = 50
+    let numberOfPortions = 4
+    let artistName = "mike"
     
     override func setUp() {
         super.setUp()
-        sut = ArtistSearchViewModel(portionSize: 50)
+        sut = InfinityList<Artist>(portionSize: portionSize)
     }
     
     override func tearDown() {
@@ -30,12 +34,11 @@ class Agima_M6_ArtistSearchViewModelTests: XCTestCase {
         let api = MusicAPI()
         var test: [Artist] = []
 
-        let portionSize = 50
-        let numberOfPortions = 4
+        
 
         let exp = expectation(description: "test data loaded")
 
-        api.search(artistName: "lana", limit: portionSize * numberOfPortions, offset: 0) { artists in
+        api.fetch(ArtistEndpoint.searchByName(artistName), offset: 0, limit: portionSize * numberOfPortions) { (artists) in
             test = artists
             exp.fulfill()
         }
@@ -43,21 +46,26 @@ class Agima_M6_ArtistSearchViewModelTests: XCTestCase {
         wait(for: [exp], timeout: 5.0)
         let bag = DisposeBag()
         let exp1 = expectation(description: "All portions loaded")
-        sut.artists.subscribe(onNext: { artists in
-            if artists.count == portionSize * numberOfPortions {
+        sut.items.subscribe(onNext: { [weak self] artists in
+            if artists.count == self!.portionSize * self!.numberOfPortions {
                 exp1.fulfill()
             }
             }).disposed(by: bag)
 
-        sut.fetch(searchTerm: "lana")
+        sut.fetch(endpoint: .searchByName(artistName))
         for _ in 0..<numberOfPortions - 1 {
             sut.fetchNextPortion()
         }
         
         wait(for: [exp1], timeout: 5.0)
-        XCTAssert(sut.artists.value.count == test.count, "Arrays must be equal size (\(sut.artists.value.count) - \(test.count))")
         
-        let left = sut.artists.value.sorted(by: { $0.artistId < $1.artistId })
+        let result = sut.items.value
+        
+        XCTAssert(result.count == test.count, "Arrays must be equal size (\(result.count) - \(test.count))")
+        
+        guard result.count == test.count else { return }
+        
+        let left = result.sorted(by: { $0.artistId < $1.artistId })
         let right = test.sorted(by:  { $0.artistId < $1.artistId })
         for i in 0..<test.count {
             XCTAssert(left[i] == right[i], "Entities at index: \(i) must be equal")
@@ -69,4 +77,10 @@ class Agima_M6_ArtistSearchViewModelTests: XCTestCase {
         print("test case deallocated")
     }
     
+}
+
+extension Artist: Equatable {
+    public static func == (lhs: Artist, rhs: Artist) -> Bool {
+        lhs.artistId == rhs.artistId
+    }
 }

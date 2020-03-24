@@ -17,7 +17,7 @@ class SearchViewController: UIViewController {
     private var activityIndicator: UIActivityIndicatorView!
     private var stateLabel: UILabel!
     
-    private let viewModel = ArtistSearchViewModel()
+    private let viewModel = InfinityList<Artist>(musicProvider: MusicAPI())
     
     private let bag = DisposeBag()
     
@@ -47,25 +47,34 @@ class SearchViewController: UIViewController {
             .compactMap { $0 }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] searchText in
-                self?.viewModel.fetch(searchTerm: searchText)
+                if searchText.isEmpty {
+                    self?.viewModel.reset()
+                } else {
+                    self?.viewModel.fetch(endpoint: .searchByName(searchText))
+                }
             }).disposed(by: bag)
         
         tableView.tableHeaderView = searchBar
     }
     
     private func setupFooter() {
+        
+        let padding: CGFloat = 8
+        
         activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.sizeToFit()
         activityIndicator.hidesWhenStopped = true
         
         stateLabel = UILabel()
+        stateLabel.text = "Default"
         stateLabel.textColor = .tertiaryLabel
         stateLabel.sizeToFit()
         
         let stackView = UIStackView(arrangedSubviews: [activityIndicator, stateLabel])
+        stackView.spacing = padding
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.frame = CGRect(x: 0, y: 0, width: 0, height: activityIndicator.bounds.height + stateLabel.bounds.height)
+        stackView.frame = CGRect(x: 0, y: 0, width: 0, height: activityIndicator.bounds.height + stateLabel.bounds.height + padding)
         
         tableView.tableFooterView = stackView
     }
@@ -73,7 +82,7 @@ class SearchViewController: UIViewController {
     private func setupTableView() {
         tableView.delegate = self
         
-        viewModel.artists.bind(to: tableView.rx.items(cellIdentifier: "ArtistCell", cellType: UITableViewCell.self)) { index, artist, cell in
+        viewModel.items.bind(to: tableView.rx.items(cellIdentifier: "ArtistCell", cellType: UITableViewCell.self)) { index, artist, cell in
             cell.textLabel?.text = artist.name
             cell.detailTextLabel?.text = artist.primaryGenreName
         }.disposed(by: bag)
@@ -85,7 +94,7 @@ class SearchViewController: UIViewController {
             let vc = segue.destination as! ArtistViewController
             let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPath(for: cell)!
-            vc.viewModel = ArtistViewModel(artist: viewModel.artists.value[indexPath.row])
+            vc.viewModel = ArtistViewModel(artist: viewModel.items.value[indexPath.row])
         default:
             break
         }
@@ -95,7 +104,7 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == viewModel.artists.value.count - 1 {
+        if indexPath.row == viewModel.items.value.count - 1 {
             viewModel.fetchNextPortion()
         }
     }
@@ -103,4 +112,3 @@ extension SearchViewController: UITableViewDelegate {
         performSegue(withIdentifier: "Show Artist", sender: tableView.cellForRow(at: indexPath))
     }
 }
-

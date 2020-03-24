@@ -8,14 +8,22 @@
 
 import Foundation
 
-struct Artist: Equatable, Codable {
+struct Artist {
     let name: String
     let artistId: Int
     let primaryGenreName: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case name = "artistName"
-        case artistId
-        case primaryGenreName
+}
+
+extension Artist: JSONDecodable {
+    init?(data: NSDictionary) {
+        
+        guard let name = data["artistName"] as? String,
+            let artistId = data["artistId"] as? Int else
+        { return nil }
+        
+        self.name = name
+        self.artistId = artistId
+        self.primaryGenreName = data["primaryGenreName"] as? String
+        
     }
 }

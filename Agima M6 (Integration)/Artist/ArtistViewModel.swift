@@ -7,8 +7,6 @@
 //
 
 import Foundation
-//import RxCocoa
-//import RxSwift
 
 final class ArtistViewModel {
     
@@ -28,7 +26,7 @@ final class ArtistViewModel {
     }
     
     func fetchAlbums() {
-        musicProvider.getAlbums(for: artist, limit: maxNumberOfAlbums) { albums in
+        musicProvider.fetch(AlbumEndpoint.searchByArtist(artist: artist), offset: 0, limit: 10){ albums in
             DispatchQueue.main.async {
                 self.albums = albums
                 self.onAlbumsChange?()
@@ -37,7 +35,7 @@ final class ArtistViewModel {
     }
     
     func fetchSongs() {
-        musicProvider.getSongs(for: artist, limit: maxNumberOfSongs) { songs in
+        musicProvider.fetch(SongEndpoint.searchByArtist(artist: artist), offset: 0, limit: 10) { songs in
             DispatchQueue.main.async {
                 self.songs = songs
                 self.onSongsChange?()

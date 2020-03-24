@@ -38,7 +38,22 @@ class ArtistViewController: UIViewController {
         viewModel.fetchSongs()
         viewModel.fetchAlbums()
     }
-
+    
+    private func showAllSongs() {
+        let vc = InfinityListViewController(
+                list: InfinityList<Song>(musicProvider: viewModel.musicProvider),
+                endpoint: .searchByArtist(artist: viewModel.artist))
+        vc.title = "All songs"
+        show(vc, sender: nil)
+    }
+    
+    private func showAllAlbums() {
+        let vc = InfinityListViewController(
+            list: InfinityList<Album>(musicProvider: viewModel.musicProvider),
+            endpoint: .searchByArtist(artist: viewModel.artist))
+        vc.title = "All albums"
+        show(vc, sender: nil)
+    }
 }
 
 // MARK: - Table View
@@ -83,7 +98,7 @@ extension ArtistViewController: UITableViewDataSource {
             header.textLabel?.text = "Top albums"
             header.button.setTitle("See all", for: .normal)
             header.buttonAction = { [weak self] _ in
-                self?.performSegue(withIdentifier: "Show All Albums", sender: nil)
+                self?.showAllAlbums()
             }
             return header
         case 1:
@@ -91,7 +106,7 @@ extension ArtistViewController: UITableViewDataSource {
             header.textLabel?.text = "Top songs"
             header.button.setTitle("See all", for: .normal)
             header.buttonAction = { [weak self] _ in
-                self?.performSegue(withIdentifier: "Show All Songs", sender: nil)
+                self?.showAllSongs()
             }
             return header
         default:
