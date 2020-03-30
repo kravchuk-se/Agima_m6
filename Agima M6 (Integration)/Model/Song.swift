@@ -16,6 +16,7 @@ struct Song: JSONDecodable {
     let trackPrice: Double
     let releaseDate: Date
     let artistName: String
+    let previewUrl: URL
     
     init?(data: NSDictionary) {
         guard let type = data["wrapperType"] as? String, type == "track" else { return nil }
@@ -23,6 +24,7 @@ struct Song: JSONDecodable {
             let artworkUrl30 = data["artworkUrl30"] as? String,
             let artworkUrl60 = data["artworkUrl60"] as? String,
             let artworkUrl100 = data["artworkUrl100"] as? String,
+            let previewUrl = data["previewUrl"] as? String,
             let artistName = data["artistName"] as? String,
             let trackPrice = data["trackPrice"] as? Double,
             let releaseDate = data["releaseDate"] as? String  else
@@ -40,5 +42,6 @@ struct Song: JSONDecodable {
         self.artworkUrl100 = url100
         self.trackPrice = trackPrice
         self.releaseDate = date
+        self.previewUrl = URL(string: previewUrl)!
     }
 }

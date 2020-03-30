@@ -10,6 +10,8 @@ import UIKit
 import RxCocoa
 import RxSwift
 
+import AVFoundation
+
 class ArtistViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
@@ -17,6 +19,9 @@ class ArtistViewController: UIViewController {
     var viewModel: ArtistViewModel!
     
     private let bag = DisposeBag()
+    private var downloadService: DownloadService!
+    
+    var player: AVAudioPlayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +42,10 @@ class ArtistViewController: UIViewController {
         
         viewModel.fetchSongs()
         viewModel.fetchAlbums()
+        
+        downloadService = DownloadService()
+        downloadService.delegate = self
+        
     }
     
     private func showAllSongs() {
@@ -85,10 +94,27 @@ extension ArtistViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumsCell", for: indexPath)
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath)
-            let song = viewModel.songs[indexPath.row]
-            cell.textLabel?.text = song.trackName
-            cell.detailTextLabel?.text = song.artistName
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath) as! SongTableViewCell
+            let song = viewModel.songs[indexPath.row].song
+            cell.songTitleLabel?.text = song.trackName
+            cell.artistNameLabel?.text = song.artistName
+            cell.delegate = self
+            
+            let loadingState = viewModel.songs[indexPath.row].loadingState
+            switch loadingState {
+            case .done:
+                cell.downloadButton.loadingState = .done
+            case .loading(progress: let progress):
+                cell.downloadButton.loadingState = .inProgress
+                cell.downloadButton.progress = CGFloat(progress)
+            case .paused(progress: let progress):
+                cell.downloadButton.loadingState = .paused
+                cell.downloadButton.progress = CGFloat(progress)
+            case .notStarted:
+                cell.downloadButton.loadingState = .stoped
+                cell.downloadButton.progress = 0
+            }
+            
             return cell
         default:
             return UITableViewCell()
@@ -137,6 +163,19 @@ extension ArtistViewController: UITableViewDataSource {
 }
 
 extension ArtistViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let songViewModel = viewModel.songs[indexPath.row]
+        if let fileURL = songViewModel.fileURL {
+            
+            try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try! AVAudioSession.sharedInstance().setActive(true)
+            
+            try! player = AVAudioPlayer(contentsOf: fileURL, fileTypeHint: "m4a")
+            player?.play()
+            
+        }
+    }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let cell = cell as! AlbumsTableViewCell
@@ -157,5 +196,70 @@ extension ArtistViewController: UICollectionViewDataSource {
         cell.setImage(url: viewModel.albums[indexPath.item].artworkUrl100)
         cell.titleLabel.text = viewModel.albums[indexPath.item].collectionName
         return cell
+    }
+}
+
+
+// MARK: - Song Table View Cell Delegate
+
+extension ArtistViewController: SongTableViewCellDelegate {
+    func songTableViewCell(_ cell: SongTableViewCell, didPressButton downloadButton: DownloadButton) {
+        
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+       
+        let state = downloadService.state(of: viewModel.songs[indexPath.row].song)
+        
+        switch state {
+        case .done:
+            break
+        case .loading(_):
+            cell.downloadButton.loadingState = .paused
+            downloadService.pause(song: viewModel.songs[indexPath.row].song)
+        case .notStarted:
+            cell.downloadButton.loadingState = .inProgress
+            cell.downloadButton.progress = 0
+            downloadService.start(song: viewModel.songs[indexPath.row].song)
+        case .paused(_):
+            cell.downloadButton.loadingState = .inProgress
+            downloadService.resume(song: viewModel.songs[indexPath.row].song)
+        }
+        
+    }
+}
+
+extension ArtistViewController: DownloadServiceDelegate {
+    func downloadService(_ downloadService: DownloadService, didUpdateSong song: Song, withProgress progress: Double) {
+        DispatchQueue.main.async {
+            guard let row = self.viewModel.songs.firstIndex(where: { $0.song.previewUrl == song.previewUrl }) else {
+                return
+            }
+            let indexPath = IndexPath(row: row, section: 1)
+            self.viewModel.songs[indexPath.row].loadingState = .loading(progress: progress)
+            if let cell = self.tableView.cellForRow(at: indexPath) as? SongTableViewCell {
+                cell.downloadButton.progress = CGFloat(progress)
+            }
+        }
+    }
+    
+    func downloadService(_ downloadService: DownloadService, didFinishDownloadingSong song: Song, to location: URL) {
+        
+        let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(location.lastPathComponent)
+        
+        try? FileManager.default.removeItem(at: destinationURL)
+        
+        try! FileManager.default.copyItem(at: location, to: destinationURL)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            guard let row = self.viewModel.songs.firstIndex(where: { $0.song.previewUrl == song.previewUrl }) else {
+                return
+            }
+            let indexPath = IndexPath(row: row, section: 1)
+            self.viewModel.songs[indexPath.row].loadingState = .done
+            self.viewModel.songs[indexPath.row].fileURL = destinationURL
+            if let cell = self.tableView.cellForRow(at: indexPath) as? SongTableViewCell {
+                cell.downloadButton.progress = 100
+                cell.downloadButton.loadingState = .done
+            }
+        }
     }
 }

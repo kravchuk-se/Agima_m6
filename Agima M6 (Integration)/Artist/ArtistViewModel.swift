@@ -8,6 +8,16 @@
 
 import Foundation
 
+final class SongViewModel {
+    let song: Song
+    var loadingState: DownloadState = .notStarted
+    var fileURL: URL?
+    
+    init(song: Song) {
+        self.song = song
+    }
+}
+
 final class ArtistViewModel {
     
     let musicProvider: MusicProvider = MusicAPI()
@@ -19,7 +29,7 @@ final class ArtistViewModel {
     private let maxNumberOfAlbums = 10
     private let maxNumberOfSongs = 10
     private (set) var albums: [Album] = []
-    private (set) var songs: [Song] = []
+    private (set) var songs: [SongViewModel] = []
     
     init(artist: Artist) {
         self.artist = artist
@@ -37,7 +47,7 @@ final class ArtistViewModel {
     func fetchSongs() {
         musicProvider.fetch(SongEndpoint.searchByArtist(artist: artist), offset: 0, limit: 10) { songs in
             DispatchQueue.main.async {
-                self.songs = songs
+                self.songs = songs.map({ SongViewModel.init(song: $0) })
                 self.onSongsChange?()
             }
         }
