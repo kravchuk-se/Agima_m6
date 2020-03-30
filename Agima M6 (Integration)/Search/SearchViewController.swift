@@ -10,21 +10,24 @@ import UIKit
 import RxCocoa
 import RxSwift
 
+protocol SearchViewControllerDelegate: AnyObject {
+    func searchViewController(_ svc: SearchViewController, didSelectArtist artist: Artist)
+}
+
 class SearchViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    private var searchBar: UISearchBar!
     private var activityIndicator: UIActivityIndicatorView!
     private var stateLabel: UILabel!
     
-    private let viewModel = InfinityList<Artist>(musicProvider: MusicAPI())
+    weak var delegate: SearchViewControllerDelegate?
     
+    private let viewModel = InfinityList<Artist>(musicProvider: MusicAPI())
     private let bag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupSearchBar()
         setupFooter()
         setupTableView()
         
@@ -36,25 +39,6 @@ class SearchViewController: UIViewController {
             .observeOn(MainScheduler.asyncInstance)
             .bind(to: stateLabel.rx.text)
             .disposed(by: bag)
-    }
-    
-    private func setupSearchBar() {
-        searchBar = UISearchBar()
-        searchBar.sizeToFit()
-        
-        searchBar.rx.text
-            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
-            .compactMap { $0 }
-            .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] searchText in
-                if searchText.isEmpty {
-                    self?.viewModel.reset()
-                } else {
-                    self?.viewModel.fetch(endpoint: .searchByName(searchText))
-                }
-            }).disposed(by: bag)
-        
-        tableView.tableHeaderView = searchBar
     }
     
     private func setupFooter() {
@@ -100,6 +84,14 @@ class SearchViewController: UIViewController {
         }
     }
     
+    func search(for searchTerm: SearchTerm) {
+        if searchTerm.isEmpty {
+            viewModel.reset()
+        } else {
+            viewModel.fetch(endpoint: .searchByName(searchTerm))
+        }
+    }
+    
 }
 
 extension SearchViewController: UITableViewDelegate {
@@ -109,6 +101,6 @@ extension SearchViewController: UITableViewDelegate {
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "Show Artist", sender: tableView.cellForRow(at: indexPath))
+        delegate?.searchViewController(self, didSelectArtist: viewModel.items.value[indexPath.row])
     }
 }

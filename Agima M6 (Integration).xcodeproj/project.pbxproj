@@ -34,10 +34,12 @@
 		7C9A322524201BFB00CDF46C /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A322424201BFB00CDF46C /* Artist.swift */; };
 		7C9EA4832420D419007FAA9A /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9EA4822420D419007FAA9A /* AlbumCollectionViewCell.swift */; };
 		7C9EA487242107B5007FAA9A /* AlbumsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9EA486242107B5007FAA9A /* AlbumsTableViewCell.swift */; };
+		7CD303432431DD43006CE1FB /* Search.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CD303422431DA50006CE1FB /* Search.storyboard */; };
 		7CEC55952430FCC7001A680C /* CGPoint+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEC55942430FCC6001A680C /* CGPoint+.swift */; };
 		7CEC55972430FCDE001A680C /* CGRect+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEC55962430FCDE001A680C /* CGRect+.swift */; };
 		7CEC559A2430FD20001A680C /* DownloadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEC55992430FD20001A680C /* DownloadButton.swift */; };
 		7CEC559C243100C8001A680C /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEC559B243100C8001A680C /* SongTableViewCell.swift */; };
+		7CEC559E2431CD7F001A680C /* SearchHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEC559D2431CD7F001A680C /* SearchHistoryViewController.swift */; };
 		E9AFD037A3584ACF1E69F8D7 /* libPods-Agima M6 (Integration).a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40560372DE147B53E498802A /* libPods-Agima M6 (Integration).a */; };
 /* End PBXBuildFile section */
 
@@ -85,10 +87,12 @@
 		7C9A322424201BFB00CDF46C /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		7C9EA4822420D419007FAA9A /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		7C9EA486242107B5007FAA9A /* AlbumsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsTableViewCell.swift; sourceTree = "<group>"; };
+		7CD303422431DA50006CE1FB /* Search.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Search.storyboard; path = "/Users/kravchuksergey/Developer/Skillbox_Agima/Agima M6 (Integration)/Agima M6 (Integration)/View/Search.storyboard"; sourceTree = "<absolute>"; };
 		7CEC55942430FCC6001A680C /* CGPoint+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+.swift"; sourceTree = "<group>"; };
 		7CEC55962430FCDE001A680C /* CGRect+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+.swift"; sourceTree = "<group>"; };
 		7CEC55992430FD20001A680C /* DownloadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButton.swift; sourceTree = "<group>"; };
 		7CEC559B243100C8001A680C /* SongTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
+		7CEC559D2431CD7F001A680C /* SearchHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryViewController.swift; sourceTree = "<group>"; };
 		974106A83396C7A098F18706 /* Pods-Agima M6 (Integration)Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agima M6 (Integration)Tests.release.xcconfig"; path = "Target Support Files/Pods-Agima M6 (Integration)Tests/Pods-Agima M6 (Integration)Tests.release.xcconfig"; sourceTree = "<group>"; };
 		AE39439FA78C5FCDDE815CF6 /* libPods-Agima M6 (Integration)Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Agima M6 (Integration)Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5F76F77420B80C38E52208C /* Pods-Agima M6 (Integration).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agima M6 (Integration).release.xcconfig"; path = "Target Support Files/Pods-Agima M6 (Integration)/Pods-Agima M6 (Integration).release.xcconfig"; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				7C5B9AB4241C0B6B00824A94 /* Main.storyboard */,
+				7CD303422431DA50006CE1FB /* Search.storyboard */,
 				7CEC559B243100C8001A680C /* SongTableViewCell.swift */,
 				7C9EA4822420D419007FAA9A /* AlbumCollectionViewCell.swift */,
 				7C9EA486242107B5007FAA9A /* AlbumsTableViewCell.swift */,
@@ -215,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				7C5B9AB2241C0B6B00824A94 /* SearchViewController.swift */,
+				7CEC559D2431CD7F001A680C /* SearchHistoryViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -341,6 +347,7 @@
 			files = (
 				7C5B9ABB241C0B6F00824A94 /* LaunchScreen.storyboard in Resources */,
 				7C5B9AB8241C0B6F00824A94 /* Assets.xcassets in Resources */,
+				7CD303432431DD43006CE1FB /* Search.storyboard in Resources */,
 				7C5B9AB6241C0B6B00824A94 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,6 +415,7 @@
 			files = (
 				7C6CF71724293568000C5ACB /* LoadingOperation.swift in Sources */,
 				7CEC55972430FCDE001A680C /* CGRect+.swift in Sources */,
+				7CEC559E2431CD7F001A680C /* SearchHistoryViewController.swift in Sources */,
 				7C9A322324201BE400CDF46C /* Song.swift in Sources */,
 				7C6CF71D24295F74000C5ACB /* InfinityListViewController.swift in Sources */,
 				7C5B9AC4241C112900824A94 /* MusicAPI.swift in Sources */,
