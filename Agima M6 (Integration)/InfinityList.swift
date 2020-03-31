@@ -23,7 +23,7 @@ class InfinityList<T: Loadable> {
     private var endpoint: T.EndpointType?
     private let queue: OperationQueue = {
         let queue = OperationQueue()
-        queue.name = "Infinity list loading operation queue"
+        queue.name = "com.kravchuk.infinity_list_queue.\(T.self)"
         queue.maxConcurrentOperationCount = 1
         return queue
     }()
