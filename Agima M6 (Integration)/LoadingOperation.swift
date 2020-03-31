@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol LoadingOperationDelegate: AnyObject {
+protocol LoadingOperationDataSource: AnyObject {
     var numberOfLoadedItems: Int { get }
 }
 
@@ -22,7 +22,7 @@ final class LoadingOperation<T: Loadable>: Operation {
     
     var endpoint: T.EndpointType
     var result: [T]?
-    weak var delegate: LoadingOperationDelegate?
+    weak var delegate: LoadingOperationDataSource?
     let portionSize: Int
     let musicProvider: MusicProvider
     
@@ -39,7 +39,7 @@ final class LoadingOperation<T: Loadable>: Operation {
         }
     }
 
-    init(musicProvider: MusicProvider, endpoint: T.EndpointType, portionSize: Int, delegate: LoadingOperationDelegate) {
+    init(musicProvider: MusicProvider, endpoint: T.EndpointType, portionSize: Int, delegate: LoadingOperationDataSource) {
         self.musicProvider = musicProvider
         self.endpoint = endpoint
         self.delegate = delegate

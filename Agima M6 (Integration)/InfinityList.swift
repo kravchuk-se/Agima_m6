@@ -82,7 +82,7 @@ class InfinityList<T: Loadable> {
     
 }
 
-extension InfinityList: LoadingOperationDelegate {
+extension InfinityList: LoadingOperationDataSource {
     var numberOfLoadedItems: Int {
         return items.value.count
     }
