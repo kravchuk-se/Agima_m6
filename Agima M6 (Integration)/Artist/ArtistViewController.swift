@@ -239,7 +239,7 @@ extension ArtistViewController: SongTableViewCellDelegate {
 extension ArtistViewController: DownloadServiceDelegate {
     func downloadService(_ downloadService: DownloadService, didUpdateSong song: Song, withProgress progress: Double) {
         DispatchQueue.main.async {
-            guard let row = self.viewModel.songs.firstIndex(where: { $0.song.previewUrl == song.previewUrl }) else {
+            guard let row = self.viewModel.songs.firstIndex(where: { $0.song == song }) else {
                 return
             }
             let indexPath = IndexPath(row: row, section: 1)
@@ -259,7 +259,7 @@ extension ArtistViewController: DownloadServiceDelegate {
         try! FileManager.default.copyItem(at: location, to: destinationURL)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            guard let row = self.viewModel.songs.firstIndex(where: { $0.song.previewUrl == song.previewUrl }) else {
+            guard let row = self.viewModel.songs.firstIndex(where: { $0.song == song }) else {
                 return
             }
             let indexPath = IndexPath(row: row, section: 1)

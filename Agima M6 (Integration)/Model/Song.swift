@@ -45,3 +45,7 @@ struct Song: JSONDecodable {
         self.previewUrl = URL(string: previewUrl)!
     }
 }
+
+extension Song: Equatable {
+    
+}
