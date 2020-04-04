@@ -17,5 +17,6 @@ protocol AppleMusicEndpoint: Request {
 }
 
 protocol MusicProvider {
-    func fetch<T>(_ endpoint: T, offset: Int, limit: Int, completion: @escaping (([T.Entity]) -> ())) where T: AppleMusicEndpoint, T: InfinityListRequest
+    @discardableResult
+    func fetch<T>(_ endpoint: T, offset: Int, limit: Int, completion: @escaping (([T.Entity]) -> ())) -> URLSessionDataTask where T: AppleMusicEndpoint, T: InfinityListRequest
 }

@@ -10,9 +10,9 @@ import Foundation
 
 struct MusicAPI : MusicProvider {
     
-    func fetch<T>(_ endpoint: T, offset: Int, limit: Int, completion: @escaping (([T.Entity]) -> ())) where T : AppleMusicEndpoint, T : InfinityListRequest {
+    func fetch<T>(_ endpoint: T, offset: Int, limit: Int, completion: @escaping (([T.Entity]) -> ())) -> URLSessionDataTask where T : AppleMusicEndpoint, T : InfinityListRequest {
         let url = endpoint.makeRequest(offset: offset, limit: limit)
-        urlSession.dataTask(with: url) { data, response, error in
+        let task = urlSession.dataTask(with: url) { data, response, error in
             if let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data) as? NSDictionary,
                 let results = json["results"] as? [NSDictionary] {
@@ -25,7 +25,9 @@ struct MusicAPI : MusicProvider {
             } else {
                 fatalError("Oops")
             }
-        }.resume()
+        }
+        task.resume()
+        return task
     }
     
     // https://itunes.apple.com/search?term=lana&entity=musicArtist&limit=50&offset=0
