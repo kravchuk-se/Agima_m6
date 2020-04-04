@@ -36,7 +36,7 @@ class SearchHistoryViewController: UIViewController {
         navigationItem.searchController = searchController
         
         searchController.searchBar.rx.text
-            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .compactMap { $0 }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] searchTerm in
