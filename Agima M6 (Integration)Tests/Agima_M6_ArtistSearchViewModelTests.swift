@@ -13,7 +13,7 @@ import RxSwift
 
 class Agima_M6_ArtistSearchViewModelTests: XCTestCase {
     
-    var sut: InfinityList<Artist>!
+    var sut: InfiniteList<Artist>!
     
     let portionSize = 50
     let numberOfPortions = 4
@@ -21,7 +21,7 @@ class Agima_M6_ArtistSearchViewModelTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        sut = InfinityList<Artist>(portionSize: portionSize)
+        sut = InfiniteList<Artist>(portionSize: portionSize)
     }
     
     override func tearDown() {

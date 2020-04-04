@@ -50,7 +50,7 @@ class ArtistViewController: UIViewController {
     
     private func showAllSongs() {
         let vc = InfinityListViewController(
-                list: InfinityList<Song>(musicProvider: viewModel.musicProvider),
+                list: InfiniteList<Song>(musicProvider: viewModel.musicProvider),
                 endpoint: .searchByArtist(artist: viewModel.artist))
         vc.title = "All songs"
         vc.cellConfiguration = { song, cell in
@@ -62,7 +62,7 @@ class ArtistViewController: UIViewController {
     
     private func showAllAlbums() {
         let vc = InfinityListViewController(
-            list: InfinityList<Album>(musicProvider: viewModel.musicProvider),
+            list: InfiniteList<Album>(musicProvider: viewModel.musicProvider),
             endpoint: .searchByArtist(artist: viewModel.artist))
         vc.title = "All albums"
         vc.cellConfiguration = { album, cell in

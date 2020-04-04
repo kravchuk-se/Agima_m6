@@ -22,7 +22,7 @@ class SearchViewController: UIViewController {
     
     weak var delegate: SearchViewControllerDelegate?
     
-    private let viewModel = InfinityList<Artist>(musicProvider: MusicAPI())
+    private let viewModel = InfiniteList<Artist>(musicProvider: MusicAPI())
     private let bag = DisposeBag()
     
     override func viewDidLoad() {

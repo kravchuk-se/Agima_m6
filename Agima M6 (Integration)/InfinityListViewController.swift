@@ -14,13 +14,13 @@ class InfinityListViewController<T: Loadable>: UIViewController, UITableViewDele
     
     private var tableView: UITableView!
     
-    var infinityList: InfinityList<T>
+    var infinityList: InfiniteList<T>
     var endpoint: T.EndpointType
     
     private let cellIdentifier = "Cell"
     private let bag = DisposeBag()
     
-    init(list: InfinityList<T>, endpoint: T.EndpointType) {
+    init(list: InfiniteList<T>, endpoint: T.EndpointType) {
         self.infinityList = list
         self.endpoint = endpoint
 

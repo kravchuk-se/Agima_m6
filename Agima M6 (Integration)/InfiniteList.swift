@@ -1,5 +1,5 @@
 //
-//  InfinityList.swift
+//  InfiniteList.swift
 //  Agima M6 (Integration)
 //
 //  Created by Kravchuk Sergey on 23.03.2020.
@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class InfinityList<T: Loadable> {
+class InfiniteList<T: Loadable> {
     
     let musicProvider: MusicProvider
     let items: BehaviorRelay<[T]> = BehaviorRelay(value: [])
