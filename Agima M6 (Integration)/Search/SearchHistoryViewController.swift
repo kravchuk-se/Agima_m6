@@ -167,4 +167,7 @@ extension SearchHistoryViewController: SearchViewControllerDelegate {
     func searchViewController(_ svc: SearchViewController, didSelectArtist artist: Artist) {
         didSelectArtist(artist)
     }
+    func searchViewControllerWillBeginScroll(_ svc: SearchViewController) {
+        navigationItem.searchController?.searchBar.resignFirstResponder()
+    }
 }

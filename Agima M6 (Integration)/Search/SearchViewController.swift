@@ -12,6 +12,7 @@ import RxSwift
 
 protocol SearchViewControllerDelegate: AnyObject {
     func searchViewController(_ svc: SearchViewController, didSelectArtist artist: Artist)
+    func searchViewControllerWillBeginScroll(_ svc: SearchViewController)
 }
 
 class SearchViewController: UIViewController {
@@ -102,5 +103,11 @@ extension SearchViewController: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.searchViewController(self, didSelectArtist: viewModel.items.value[indexPath.row])
+    }
+}
+
+extension SearchViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        delegate?.searchViewControllerWillBeginScroll(self)
     }
 }
