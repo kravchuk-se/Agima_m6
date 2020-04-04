@@ -10,6 +10,7 @@ import Foundation
 
 struct MusicAPI : MusicProvider {
     
+    @discardableResult
     func fetch<T>(_ endpoint: T, offset: Int, limit: Int, completion: @escaping (([T.Entity]) -> ())) -> URLSessionDataTask where T : AppleMusicEndpoint, T : InfinityListRequest {
         let url = endpoint.makeRequest(offset: offset, limit: limit)
         let task = urlSession.dataTask(with: url) { data, response, error in
