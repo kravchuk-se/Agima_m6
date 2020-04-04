@@ -23,7 +23,6 @@
 		7C5B9AD6241C28B100824A94 /* Agima_M6_ArtistSearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B9AD5241C28B100824A94 /* Agima_M6_ArtistSearchViewModelTests.swift */; };
 		7C6CF71224290828000C5ACB /* InfinityList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CF71124290828000C5ACB /* InfinityList.swift */; };
 		7C6CF7152429351E000C5ACB /* ArtistEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CF7142429351E000C5ACB /* ArtistEndpoint.swift */; };
-		7C6CF71724293568000C5ACB /* LoadingOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CF71624293568000C5ACB /* LoadingOperation.swift */; };
 		7C6CF71924294141000C5ACB /* SongEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CF71824294141000C5ACB /* SongEndpoint.swift */; };
 		7C6CF71B242943C5000C5ACB /* AlbumEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CF71A242943C5000C5ACB /* AlbumEndpoint.swift */; };
 		7C6CF71D24295F74000C5ACB /* InfinityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6CF71C24295F74000C5ACB /* InfinityListViewController.swift */; };
@@ -76,7 +75,6 @@
 		7C5B9AD5241C28B100824A94 /* Agima_M6_ArtistSearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Agima_M6_ArtistSearchViewModelTests.swift; sourceTree = "<group>"; };
 		7C6CF71124290828000C5ACB /* InfinityList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfinityList.swift; sourceTree = "<group>"; };
 		7C6CF7142429351E000C5ACB /* ArtistEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistEndpoint.swift; sourceTree = "<group>"; };
-		7C6CF71624293568000C5ACB /* LoadingOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOperation.swift; sourceTree = "<group>"; };
 		7C6CF71824294141000C5ACB /* SongEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongEndpoint.swift; sourceTree = "<group>"; };
 		7C6CF71A242943C5000C5ACB /* AlbumEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumEndpoint.swift; sourceTree = "<group>"; };
 		7C6CF71C24295F74000C5ACB /* InfinityListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfinityListViewController.swift; sourceTree = "<group>"; };
@@ -172,7 +170,6 @@
 				7C6CF713242934A8000C5ACB /* API */,
 				7C6CF71124290828000C5ACB /* InfinityList.swift */,
 				7C414585242A8BF600083DF1 /* DownloadService.swift */,
-				7C6CF71624293568000C5ACB /* LoadingOperation.swift */,
 				7C6CF71C24295F74000C5ACB /* InfinityListViewController.swift */,
 				7C9A3226242023EE00CDF46C /* Model */,
 				7C5B9AC2241C0BAF00824A94 /* Supporting files */,
@@ -413,7 +410,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C6CF71724293568000C5ACB /* LoadingOperation.swift in Sources */,
 				7CEC55972430FCDE001A680C /* CGRect+.swift in Sources */,
 				7CEC559E2431CD7F001A680C /* SearchHistoryViewController.swift in Sources */,
 				7C9A322324201BE400CDF46C /* Song.swift in Sources */,

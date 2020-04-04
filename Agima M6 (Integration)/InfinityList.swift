@@ -20,13 +20,10 @@ class InfinityList<T: Loadable> {
     
     let portionSize: Int
     
+    private let newItemsRequested: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     private var endpoint: T.EndpointType?
-    private let queue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.name = "com.kravchuk.infinity_list_queue.\(T.self)"
-        queue.maxConcurrentOperationCount = 1
-        return queue
-    }()
+    
+    private let bag = DisposeBag()
     
     init(musicProvider: MusicProvider, portionSize: Int = 50) {
         self.musicProvider = musicProvider
@@ -39,13 +36,39 @@ class InfinityList<T: Loadable> {
                 return loadingInProgress ? "Loading" : "Waiting"
             }
         }
+        
+        Observable<Bool>.combineLatest(loadingInProgress, newItemsRequested, allItemsFetched) { inProgress, itemsRequested, done in
+                return !inProgress && itemsRequested && !done
+            }
+            .filter({ $0 })
+            .compactMap({ _ in
+                return self.endpoint
+            })
+            .flatMap({ endpoint -> Observable<[T]> in
+                return Observable<[T]>.create { observer in
+                    let task = self.musicProvider.fetch(endpoint,
+                                                offset: self.items.value.count,
+                                                limit: self.portionSize) {
+                                                    newArtists in
+
+                        observer.onNext(newArtists as! [T])
+                        observer.onCompleted()
+                    }
+                    return Disposables.create {
+                        task.cancel()
+                    }
+                }
+            })
+            .subscribe(onNext: appendNewItems)
+            .disposed(by: bag)
+        
     }
     
     func reset() {
         self.endpoint = nil
-        queue.cancelAllOperations()
-        items.accept([])
+        newItemsRequested.accept(false)
         allItemsFetched.accept(false)
+        items.accept([])
     }
     
     func fetch(endpoint: T.EndpointType?) {
@@ -55,26 +78,13 @@ class InfinityList<T: Loadable> {
     }
 
     func fetchNextPortion() {
-        guard let endpoint = endpoint else { return }
-        if allItemsFetched.value { return }
-        loadingInProgress.accept(true)
-        
-        let op = LoadingOperation<T>(musicProvider: musicProvider, endpoint: endpoint, portionSize: portionSize, delegate: self)
-        let acceptResult = BlockOperation {
-            self.loadingInProgress.accept(false)
-            self.appendNewItems(op.result!)
-        }
-        acceptResult.addDependency(op)
-        queue.addOperation(op)
-        queue.addOperation(acceptResult)
-        
+        newItemsRequested.accept(true)
     }
     
     private func appendNewItems(_ newItems: [T]) {
         self.items.accept(self.items.value + newItems)
         if newItems.count < self.portionSize {
             self.allItemsFetched.accept(true)
-            self.queue.cancelAllOperations()
             loadingInProgress.accept(false)
         }
     }
@@ -82,11 +92,6 @@ class InfinityList<T: Loadable> {
     
 }
 
-extension InfinityList: LoadingOperationDataSource {
-    var numberOfLoadedItems: Int {
-        return items.value.count
-    }
-}
 protocol Request {
     var requestBaseURLComponents: URLComponents { get }
 }
