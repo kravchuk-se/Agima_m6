@@ -1,10 +1,3 @@
-//
-//  SongTableViewCell.swift
-//  Agima M6 (Integration)
-//
-//  Created by Kravchuk Sergey on 29.03.2020.
-//  Copyright © 2020 Kravchuk Sergey. All rights reserved.
-//
 
 import UIKit
 
